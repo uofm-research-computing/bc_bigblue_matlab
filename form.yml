@@ -1,18 +1,26 @@
 ---
 cluster:
-  - "owens"
-  - "pitzer"
-  - "cardinal"
+  - "bigblue"
 form:
   - auto_modules_matlab
   - auto_accounts
   - bc_num_hours
   - bc_num_slots
   - num_cores
-  - node_type
+  - ngpus
+  - alloc_mem
+  - partitions_list
   - bc_vnc_resolution
   - bc_email_on_started
 attributes:
+  alloc_mem:
+    widget: "number_field"
+    label: "Memory (GB)"
+    value: 4
+    help: "Memory allocated for job up to 1536 GB"
+    min: 4
+    max: 1536
+    step: 4
   num_cores:
     widget: "number_field"
     label: "Number of cores"
@@ -21,90 +29,82 @@ attributes:
       Number of cores on node type (4 GB per core unless requesting whole
       node). Leave blank if requesting full node.
     min: 0
-    max: 28
+    max: 192
+    step: 1
+  ngpus:
+    widget: "number_field"
+    label: "Number of GPUs"
+    value: 0
+    help: |
+      Number of GPUs in either igpuq or agpuq partitions.
+    min: 0
+    max: 2
     step: 1
   bc_num_slots: "1"
   bc_vnc_resolution:
     required: true
-  node_type:
+  partitions_list:
       widget: select
-      label: "Node type"
+      label: "Partition"
       help: |
         - **Standard Compute** <br>
-          These are standard HPC machines. Owens has 648 of these nodes with 40
-          cores and 128 GB of memory. Pitzer has 224 of these nodes with 40 cores and
-          340 of these nodes with 48 cores. All pitzer nodes have 192 GB of RAM. Chosing "any" as the node type will decrease
-          your wait time.
+          These are standard HPC machines. BigBlue icomputeq has 50 of these nodes with 40
+          cores and 192 GB of memory and acomputeq has 24 of these nodes with 192 cores.
+          Chosing "any" as the node type will decrease your wait time.
         - **GPU Enabled** <br>
-          These are HPC machines with GPUs. Owens has 160 nodes with 1 [NVIDIA Tesla P100 GPU]
-          and Pitzer has 74 nodes with 2 [NVIDIA Tesla V100 GPUs]. They have the same
-          CPU and memory characteristics of standard compute. However, Pitzer's 40 core machines
-          have 2 GPUs with 16 GB of RAM; and Pitzer's 48 core machines have 2 GPUs with 32 GB of RAM.
-          Dense GPU types have 4 GPUs with 16 GB of RAM.
+          These are HPC machines with GPUs. BigBlue igpuq has 6 nodes with 2 [NVIDIA Tesla V100 GPU]
+          and agpuq has 4 nodes with 2 [NVIDIA Tesla A100 GPUs]. They have the same
+          CPU and memory characteristics of standard compute. However, igpuq's 40 core machines
+          have 2 GPUs with 16 GB of RAM; and agpuq's 192 core machines have 2 GPUs with 100 GB of RAM.
         - **Large Memory** <br>
-          These are HPC machines with very large amounts of memory. Owens has 16 hugemem nodes
-          with 48 cores and 1.5 TB of RAM. Pitzer has 4 hugemem nodes with 3 TB of RAM and 80 cores.
-          Pitzer also has 12 Largmem nodes which have 48 cores with 768 GB of RAM.
+          These are HPC machines with very large amounts of memory. BigBlue ibigmemq has 4 bigmem nodes
+          with 40 cores and up to 1.5 TB of RAM, and abigmemq has 4 bigmem nodes with 1.5 TB of RAM and 192 cores.
 
-        [NVIDIA Tesla P100 GPU]: http://www.nvidia.com/object/tesla-p100.html
         [NVIDIA Tesla V100 GPUs]: https://www.nvidia.com/en-us/data-center/v100/
+        [NVIDIA Tesla A100 GPUs]: https://www.nvidia.com/en-us/data-center/a100/
       options:
         - [
             "any",     "any",
-            data-max-num-cores-for-cluster-owens: 28,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-max-num-cores-for-cluster-cardinal: 96,
+            data-max-num-cores-for-icomputeq: 40,
+            data-max-num-cores-for-acomputeq: 192,
           ]
         - [
-            "48 core",     "any-48core",
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
-            data-option-for-cluster-cardinal: false,
+            "icomputeq",     "icomputeq",
+            data-max-num-cores-for-icomputeq: 40,
+            data-max-num-cores-for-acomputeq: false,
           ]
         - [
-            "40 core",     "any-40core",
-            data-max-num-cores-for-cluster-pitzer: 40,
-            data-option-for-cluster-owens: false,
-            data-option-for-cluster-cardinal: false,
+            "iwholeq",     "iwholeq",
+            data-max-num-cores-for-icomputeq: 40,
+            data-max-num-cores-for-acomputeq: false,
           ]
         - [
-            "any gpu",     "gpu",
-            data-max-num-cores-for-cluster-owens: 28,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-max-num-cores-for-cluster-cardinal: 96,
+            "acomputeq",     "acomputeq",
+            data-max-num-cores-for-icomputeq: false,
+            data-max-num-cores-for-acomputeq: 192,
           ]
         - [
-            "40 core gpu",     "gpu-40core",
-            data-max-num-cores-for-cluster-pitzer: 40,
-            data-option-for-cluster-owens: false,
-            data-option-for-cluster-cardinal: false,
+            "awholeq",     "awholeq",
+            data-max-num-cores-for-icomputeq: false,
+            data-max-num-cores-for-acomputeq: 192,
           ]
         - [
-            "48 core gpu",     "gpu-48core",
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
-            data-option-for-cluster-cardinal: false,
+            "igpuq",     "igpuq",
+            data-max-num-cores-for-icomputeq: 40,
+            data-max-num-cores-for-acomputeq: false,
           ]
         - [
-            "largemem", "largemem",
-            data-min-num-cores-for-cluster-pitzer: 24,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
-            data-option-for-cluster-cardinal: false,
+            "agpuq",     "agpuq",
+            data-max-num-cores-for-icomputeq: false,
+            data-max-num-cores-for-acomputeq: 192,
           ]
         - [
-            "hugemem", "hugemem",
-            data-min-num-cores-for-cluster-owens: 4,
-            data-max-num-cores-for-cluster-owens: 48,
-            data-min-num-cores-for-cluster-pitzer: 20,
-            data-max-num-cores-for-cluster-pitzer: 80,
-            data-option-for-cluster-cardinal: false,
+            "ibigmemq",     "ibigmemq",
+            data-max-num-cores-for-icomputeq: 40,
+            data-max-num-cores-for-acomputeq: false,
           ]
         - [
-            "debug",   "debug",
-            data-max-num-cores-for-cluster-owens: 28,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
-            data-option-for-cluster-pitzer: false,
-            data-option-for-cluster-cardinal: false,
+            "abigmemq", "abigmemq",
+            data-max-num-cores-for-icomputeq: false,
+            data-max-num-cores-for-acomputeq: 192,
           ]

@@ -2,7 +2,7 @@
 cluster:
   - "bigblue"
 form:
-  - auto_modules_matlab
+  - modules
   - auto_accounts
   - bc_num_hours
   - bc_num_slots
@@ -13,6 +13,12 @@ form:
   - bc_vnc_resolution
   - bc_email_on_started
 attributes:
+  modules: 
+    widget: "text_field"
+    label: "modules to load"
+    value: "matlab"
+    help: |
+      Please select modules from "module avail" on the cluster. Use space between each module. For example "matlab/R2024a"
   alloc_mem:
     widget: "number_field"
     label: "Memory (GB)"
@@ -52,7 +58,7 @@ attributes:
           cores and 192 GB of memory and acomputeq has 24 of these nodes with 192 cores.
           Chosing "any" as the node type will decrease your wait time.
         - **GPU Enabled** <br>
-          These are HPC machines with GPUs. BigBlue igpuq has 6 nodes with 2 [NVIDIA Tesla V100 GPU]
+          These are HPC machines with GPUs. BigBlue igpuq has 6 nodes with 2 [NVIDIA Tesla V100 GPUs]
           and agpuq has 4 nodes with 2 [NVIDIA Tesla A100 GPUs]. They have the same
           CPU and memory characteristics of standard compute. However, igpuq's 40 core machines
           have 2 GPUs with 16 GB of RAM; and agpuq's 192 core machines have 2 GPUs with 100 GB of RAM.

@@ -1,9 +1,13 @@
 <%-
 
-  partition = partitions_list == "any" ? "icomputeq,igpuq,ibigmemq,acomputeq,agpuq,abigmemq" : "#{partitions_list}"
+  partition = global_queues == "any" ? "icomputeq,igpuq,ibigmemq,acomputeq,agpuq,abigmemq" : "#{global_queues}"
   slurm_args = [ "--nodes", "1", "--cpus-per-task", "#{num_cores}", "--mem", "#{alloc_mem}G", "--partition", partition ]
   if ngpus != "0"
     slurm_args.append( "--gres=gpu:#{ngpus}" )
+  end
+  if email != ""
+    slurm_args.append( "--mail-user=#{email}" )
+    slurm_args.append( "--mail-type=ALL" )
   end
   
 %>
